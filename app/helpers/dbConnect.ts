@@ -15,9 +15,7 @@ async function dbConnect() {
 
     obj.isConnected = db.connections[0].readyState;
   } catch (error) {
-    console.log("cannot connect to db");
-
-    process.exit(1);
+    console.error("cannot connect to db");
   }
 }
 export default dbConnect;
