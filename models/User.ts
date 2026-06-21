@@ -3,7 +3,7 @@ import mongoose, { Document, Schema } from "mongoose";
 interface User extends Document {
   username: string;
   password: string;
-  role : string
+  role: string;
 }
 
 const UserSchema: Schema<User> = new mongoose.Schema({
@@ -17,16 +17,15 @@ const UserSchema: Schema<User> = new mongoose.Schema({
     type: String,
     required: [true, "password is required"],
   },
-  role : {
+  role: {
     type: String,
-    required : true,
-    enum : ['User','Admin'],
-    description: "Must be one of the pre-defined roles"
-  }
+    required: true,
+    enum: ["User", "Admin"],
+    description: "Must be one of the pre-defined roles",
+  },
 });
 
-const UserModel = mongoose.model<User>("User", UserSchema);
+const UserModel =
+  mongoose.models.User || mongoose.model<User>("User", UserSchema);
 
 export default UserModel;
-
-

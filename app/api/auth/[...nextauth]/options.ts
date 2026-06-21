@@ -1,10 +1,9 @@
-import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import dbConnect from "@/app/helpers/dbConnect";
 import UserModel from "@/models/User";
 import bcrypt from "bcryptjs";
-
-const authOptions = {
+import { NextAuthOptions } from "next-auth";
+const authOptions : NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -44,26 +43,28 @@ const authOptions = {
   ],
   callbacks: {
     async session({ session, token }) {
-         if (token) {
+      if (token) {
         session.user._id = token._id;
         session.user.username = token.username;
+        session.user.role = token.role;
       }
       return session;
     },
     async jwt({ token, user }) {
-        if (user) {
-        token._id = user._id?.toString(); 
+      if (user) {
+        token._id = user._id?.toString();
         token.username = user.username;
+        token.role = user.role;
       }
       return token;
     },
   },
-  session : {
-    strategy : 'jwt'
+  session: {
+    strategy: "jwt",
   },
-  secret : process.env.NEXTAUTH_SECRET,
-  pages : {
-    signIn : '/login',
+  secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    signIn: "/login",
   },
 };
 export default authOptions;

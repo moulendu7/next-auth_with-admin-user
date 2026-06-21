@@ -1,8 +1,22 @@
-import React from 'react'
+'use client'
+import { signOut, useSession } from 'next-auth/react';
+import { useEffect } from "react";
+import { redirect } from "next/navigation";
 
-function page() {
+export function page() {
+  const { data: session, status } = useSession();
+  if(!session){
+    redirect('/login');
+  }
+  const logout = async () => {
+    signOut();
+  }
   return (
-    <div>hi i am admin dashboard</div>
+    <><div>Hello i am admin-dashboard</div>
+      <button onClick={logout}>Logout</button>
+    </>
+    
+
   )
 }
 

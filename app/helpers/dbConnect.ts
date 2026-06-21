@@ -1,4 +1,5 @@
-import mongoose, { connections } from "mongoose";
+import mongoose from "mongoose";
+import { db_seeding } from "./seedingAdmin";
 
 type dbConnection = {
   isConnected?: number;
@@ -12,8 +13,8 @@ async function dbConnect() {
   }
   try {
     const db = await mongoose.connect(process.env.MONGO_URI || "", {});
-
     obj.isConnected = db.connections[0].readyState;
+    await db_seeding();
   } catch (error) {
     console.error("cannot connect to db");
   }
