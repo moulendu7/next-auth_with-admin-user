@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
@@ -27,7 +26,7 @@ function Page() {
       redirect: false,
     });
     if (!response?.ok) {
-  toast("Invalid credentials");
+  toast("Invalid credentials",{ position: "top-right" });
   return;
 }
 

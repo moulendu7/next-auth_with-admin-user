@@ -4,54 +4,53 @@ import bcrypt from "bcryptjs";
 import { getServerSession } from "next-auth";
 import authOptions from "../auth/[...nextauth]/options";
 
-export  async function GET(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session) {
-    return Response.json(
-      { message: "You must be logged in." },
-      { status: 401 },
-    );
-  }
-  else if (session.user.role !== "Admin") {
-  return Response.json(
-    { message: "Forbidden" },
-    { status: 403 }
-  );
-}
+export async function POST(request: Request) {
+
   try {
     await dbConnect();
+
     const { username, password } = await request.json();
+
     const user = await UserModel.findOne({
       username,
     });
+
     if (user) {
       return Response.json(
         {
           success: false,
           message: "Username already taken",
-          data: null,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
-    const p = await bcrypt.hash(password, 7);
-    const _user = await UserModel.create({
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await UserModel.create({
       username,
-      password : p,
+      password: hashedPassword,
       role: "User",
     });
+
     return Response.json(
       {
         success: true,
         message: "New user created successfully",
-        data: _user,
       },
-      { status: 200 },
+      { status: 201 }
     );
   } catch (error) {
     console.log(
-      "failed to connect db/something happened in signup api endpoint",
+      "failed to connect db/something happened in signup api endpoint"
     );
-    throw error;
+
+    return Response.json(
+      {
+        success: false,
+        message: "Internal Server Error",
+      },
+      { status: 500 }
+    );
   }
 }

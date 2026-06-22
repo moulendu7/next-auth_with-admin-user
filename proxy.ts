@@ -8,8 +8,6 @@ export const config = {
 export default async function proxy(request: NextRequest) {
   const token = await getToken({ req: request });
   const url = request.nextUrl;
-  console.log("TOKEN =", token);
-console.log("ROLE =", token?.role);
   if (
     token &&
     (url.pathname.startsWith("/login") || url.pathname.startsWith("/signup"))
